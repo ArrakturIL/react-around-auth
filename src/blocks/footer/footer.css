@@ -1,19 +1,18 @@
 .footer {
-    width: 100%;
-    max-width: 880px;
-    margin: 0 0 60px;
-    align-self: center;
+  width: 100%;
+  max-width: 880px;
+  margin: 60px auto 0;
+  padding-bottom: 60px;
 }
 
-@media screen and (max-width: 880px) {
-    .footer {
-        margin: 0 19px 36px;
-        max-width: 584px;
-    }
+@media screen and (max-width: 920px) {
+  .footer {
+    text-align: center;
+  }
 }
 
-@media screen and (max-width: 595px) {
-    .footer {
-        max-width: 282px;
-    }
+@media screen and (max-width: 425px) {
+  .footer {
+    margin: 50px auto;
+  }
 }

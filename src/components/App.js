@@ -2,20 +2,27 @@
 /* =                             IMPORTS                                    = */
 /* ========================================================================== */
 
-import { useState, useEffect } from "react";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import Header from "./Header";
-import Footer from "./Footer";
-import Main from "./Main";
-import ConfirmDeletePopup from "./ConfirmDeletePopup";
-import EditProfilePopup from "./EditProfilePopup";
-import EditAvatarPopup from "./EditAvatarPopup";
-import AddPlacePopup from "./AddPlacePopup";
-import ImagePopup from "./ImagePopup";
-import api from "../utils/api";
-import FormValidator from "../utils/FormValidator";
-import config from "../utils/config";
-
+import { useState, useEffect } from 'react';
+import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import * as auth from '../utils/auth';
+import Header from './Header';
+import Footer from './Footer';
+import Main from './Main';
+import ConfirmDeletePopup from './ConfirmDeletePopup';
+import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
+import ImagePopup from './ImagePopup';
+import api from '../utils/api';
+import FormValidator from '../utils/FormValidator';
+import config from '../utils/config';
+// import HeaderNav from './HeaderNav';
+import InfoTooltip from './InfoTooltip';
+import Login from './Login';
+import ProtectedRoute from './ProtectedRoute';
+import Register from './Register';
+import UserDetails from './UserDetails';
 /* ========================================================================== */
 /* =                               MAIN APP                                 = */
 /* ========================================================================== */
@@ -24,37 +31,49 @@ function App() {
   /* ========================================================================== */
   /* =                             USE STATE                                  = */
   /* ========================================================================== */
-
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isAddPlaceOpen, setIsAddPlaceOpen] = useState(false);
   const [isEditAvatarOpen, setIsEditAvatarOpen] = useState(false);
   const [isConfirmDeletePopupOpen, setIsConfirmDeletePopupOpen] =
     useState(false);
   const [cardPopup, setCardPopup] = useState(undefined);
-  const [currentUser, setCurrentUser] = useState({
-    name: "",
-    about: "",
-    avatar: "",
-  });
+  const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [selectedToDeleteCard, setSelectedToDeleteCard] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthOkPopupOpen, setIsAuthOkPopupOpen] = useState(false);
+  const [isAuthErrorPopupOpen, setIsAuthErrorPopupOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isUserDetailsOpen, setIsUserDetailsOpen] = useState(false);
+  const [isMobileSized, setIsMobileSized] = useState(window.innerWidth <= 650);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const navigate = useNavigate();
+
+  const handleResize = () => setWindowWidth(window.innerWidth);
 
   /* ========================================================================== */
   /* =                             USE EFFECT                                 = */
   /* ========================================================================== */
 
   useEffect(() => {
-    api
-      .getUserInfo()
-      .then((userData) => {
-        setCurrentUser(userData);
+    const getUserInfoFromAPI = () => {
+      return api.getUserInfo();
+    };
+    const getUserInfoFromToken = () => {
+      const jwt = localStorage.getItem('jwt');
+      if (jwt) return auth.getContent(jwt);
+    };
+    Promise.allSettled([getUserInfoFromAPI(), getUserInfoFromToken()])
+      .then((values) => {
+        const apiUserInfo = values[0].value;
+        const tokenUserInfo = values[1].value ? values[1].value.data : null;
+        setCurrentUser({ ...tokenUserInfo, ...apiUserInfo });
+        if (tokenUserInfo) setIsLoggedIn(true);
+        navigate('/');
       })
-      .catch((err) => {
-        console.log(`Error: ${err}`);
-      });
+      .catch((err) => console.log(`Error: ${err}`));
+      // eslint-disable-next-line
   }, []);
-
   // ========================================================================== //
 
   useEffect(() => {
@@ -70,18 +89,20 @@ function App() {
 
   // ========================================================================== //
 
+  //==========================================================================//
+
   useEffect(() => {
     const handleClickClose = (e) => {
       if (
-        e.target.classList.contains("popup_open") ||
-        e.target.classList.contains("popup__close")
+        e.target.classList.contains('popup_open') ||
+        e.target.classList.contains('popup__close')
       ) {
         closeAllPopups();
       }
     };
 
     const handleEscClose = (e) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         closeAllPopups();
       }
     };
@@ -93,12 +114,12 @@ function App() {
       isConfirmDeletePopupOpen ||
       cardPopup
     ) {
-      document.addEventListener("mousedown", handleClickClose);
-      document.addEventListener("keydown", handleEscClose);
+      document.addEventListener('mousedown', handleClickClose);
+      document.addEventListener('keydown', handleEscClose);
     }
     return () => {
-      document.removeEventListener("mousedown", handleClickClose);
-      document.removeEventListener("keydown", handleEscClose);
+      document.removeEventListener('mousedown', handleClickClose);
+      document.removeEventListener('keydown', handleEscClose);
     };
   }, [
     isEditProfileOpen,
@@ -107,6 +128,21 @@ function App() {
     isConfirmDeletePopupOpen,
     cardPopup,
   ]);
+
+  //==========================================================================//
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  //==========================================================================//
+
+  useEffect(() => {
+    setIsMobileSized(window.innerWidth <= 650);
+  }, [windowWidth]);
 
   /* ========================================================================== */
   /* =                            API FUNCTIONS                               = */
@@ -151,12 +187,12 @@ function App() {
 
   // ========================================================================== //
 
-  function handleUpdateUser(currentUser) {
+  function handleUpdateUser({ name, about }) {
     setIsLoading(true);
     api
-      .updateUserInfo({ name: currentUser.name, about: currentUser.about })
+      .updateUserInfo({ name, about })
       .then((userData) => {
-        setCurrentUser(userData);
+        setCurrentUser({ ...currentUser, ...userData });
         closeAllPopups();
       })
       .catch((err) => {
@@ -169,12 +205,12 @@ function App() {
 
   // ========================================================================== //
 
-  function handleUpdateAvatar(currentUser) {
+  function handleUpdateAvatar(avatar) {
     setIsLoading(true);
     api
-      .updateAvatar({ avatar: currentUser.avatar })
+      .updateAvatar(avatar)
       .then((userData) => {
-        setCurrentUser(userData);
+        setCurrentUser({ ...currentUser, ...userData });
         closeAllPopups();
       })
 
@@ -205,6 +241,54 @@ function App() {
       });
   }
 
+  // ========================================================================== //
+
+  function handleRegisterSubmit({ email, password }) {
+    setIsLoading(true);
+    auth
+      .register({ email, password })
+      .then((res) => {
+        if (res) {
+          setIsAuthOkPopupOpen(true);
+          navigate('/signin');
+        }
+      })
+      .catch((err) => {
+        setIsAuthErrorPopupOpen(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  // ========================================================================== //
+
+  function handleLogin({ email, password }) {
+    setIsLoading(true);
+    auth
+      .authorize({ email, password })
+      .then((user) => {
+        localStorage.setItem('jwt', user.token);
+        setIsLoggedIn(true);
+        setCurrentUser({ ...currentUser, email });
+        navigate('/');
+      })
+      .catch((err) => {
+        setIsAuthErrorPopupOpen(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  // ========================================================================== //
+
+  function handleLogout() {
+    localStorage.removeItem('jwt');
+    setIsLoggedIn(false);
+    setIsUserDetailsOpen(false);
+  }
+
   /* ========================================================================== */
   /* =                            CONSTANS                                   = */
   /* ========================================================================== */
@@ -214,33 +298,36 @@ function App() {
     const formList = Array.from(document.querySelectorAll(config.formSelector));
     formList.forEach((formElement) => {
       const validator = new FormValidator(formElement, config);
-      const formName = formElement.getAttribute("name");
+      const formName = formElement.getAttribute('name');
       formValidators[formName] = validator;
       validator.enableValidation();
     });
   };
 
   enableValidation(config);
+
+  // ========================================================================== //
+
   /* ========================================================================== */
   /* =                            FUNCTIONS                                   = */
   /* ========================================================================== */
 
   function handleEditProfileClick() {
-    formValidators["profile"].resetValidation();
+    formValidators['profile'].resetValidation();
     setIsEditProfileOpen(true);
   }
 
   // ========================================================================== //
 
   function handleAddPlaceClick() {
-    formValidators["new-place"].resetValidation();
+    formValidators['new-place'].resetValidation();
     setIsAddPlaceOpen(true);
   }
 
   // ========================================================================== //
 
   function handleEditAvatarClick() {
-    formValidators["edit-avatar"].resetValidation();
+    formValidators['edit-avatar'].resetValidation();
     setIsEditAvatarOpen(true);
   }
 
@@ -258,13 +345,21 @@ function App() {
   }
 
   // ========================================================================== //
-  
+
+  function handleHamburgerClick() {
+    setIsUserDetailsOpen(!isUserDetailsOpen);
+  }
+
+  //==========================================================================//
+
   function closeAllPopups() {
     setIsEditProfileOpen(false);
     setIsAddPlaceOpen(false);
     setIsEditAvatarOpen(false);
     setIsConfirmDeletePopupOpen(false);
     setCardPopup(undefined);
+    setIsAuthErrorPopupOpen(false);
+    setIsAuthOkPopupOpen(false);
   }
 
   /* ========================================================================== */
@@ -274,16 +369,26 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />
-        <Main
-          onEditProfileClick={handleEditProfileClick}
-          onAddPlaceClick={handleAddPlaceClick}
-          onEditAvatarClick={handleEditAvatarClick}
-          onConfirmDeleteClick={handleConfirmClick}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-          cards={cards}
+        <InfoTooltip
+          isOpen={isAuthOkPopupOpen}
+          onClose={closeAllPopups}
+          isSuccessful={true}
+        />
+
+        <InfoTooltip
+          isOpen={isAuthErrorPopupOpen}
+          onClose={closeAllPopups}
+          isSuccessful={false}
+        />
+        {isUserDetailsOpen && isMobileSized && (
+          <UserDetails onLogout={handleLogout} />
+        )}
+        <Header
+          isLoggedIn={isLoggedIn}
+          handleLogout={handleLogout}
+          handleHamburgerClick={handleHamburgerClick}
+          isDropDownOpen={isUserDetailsOpen}
+          isMobileSized={isMobileSized}
         />
 
         <EditProfilePopup
@@ -317,6 +422,42 @@ function App() {
 
         <ImagePopup card={cardPopup} onClose={closeAllPopups} />
 
+        <Routes>
+          <Route
+            path="/signin"
+            element={
+              <Login isLoading={isLoading} onSubmit={handleLogin} isLoggedIn />
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <Register
+                isLoading={isLoading}
+                onSubmit={handleRegisterSubmit}
+                isLoggedIn
+              />
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute redirectPath="/signin" isLoggedIn={isLoggedIn}>
+                <Main
+                  onEditProfileClick={handleEditProfileClick}
+                  onAddPlaceClick={handleAddPlaceClick}
+                  onEditAvatarClick={handleEditAvatarClick}
+                  onConfirmDeleteClick={handleConfirmClick}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                  cards={cards}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
         <Footer />
       </CurrentUserContext.Provider>
     </div>
