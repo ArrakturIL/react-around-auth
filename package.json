@@ -2,6 +2,7 @@
   "name": "around-react-auth",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://arrakturil.github.io/around-react-auth",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
@@ -20,7 +21,6 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://arrakturil.github.io/around-react-auth",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -38,8 +38,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "gh-pages": "^4.0.0"
   }
 }
