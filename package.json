@@ -20,7 +20,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://arrakturil.github.io/around-react-auth/",
+  "homepage": "https://arrakturil.github.io/around-react-auth",
   "eslintConfig": {
     "extends": [
       "react-app",
