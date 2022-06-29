@@ -8,7 +8,7 @@ import {
   Routes,
   useNavigate,
   Navigate,
-  BrowserRouter,
+  
 } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import * as auth from '../utils/auth';
@@ -375,7 +375,7 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <BrowserRouter>
+       
           <InfoTooltip
             isOpen={isAuthOkPopupOpen}
             onClose={closeAllPopups}
@@ -471,7 +471,7 @@ function App() {
           </Routes>
 
           <Footer />
-        </BrowserRouter>
+        
       </CurrentUserContext.Provider>
     </div>
   );
