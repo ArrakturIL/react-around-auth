@@ -3,7 +3,13 @@
 /* ========================================================================== */
 
 import { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useNavigate,
+  Navigate,
+  BrowserRouter,
+} from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import * as auth from '../utils/auth';
 import Header from './Header';
@@ -72,7 +78,7 @@ function App() {
         navigate('/');
       })
       .catch((err) => console.log(`Error: ${err}`));
-      // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
   // ========================================================================== //
 
@@ -369,96 +375,103 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <InfoTooltip
-          isOpen={isAuthOkPopupOpen}
-          onClose={closeAllPopups}
-          isSuccessful={true}
-        />
-
-        <InfoTooltip
-          isOpen={isAuthErrorPopupOpen}
-          onClose={closeAllPopups}
-          isSuccessful={false}
-        />
-        {isUserDetailsOpen && isMobileSized && (
-          <UserDetails onLogout={handleLogout} />
-        )}
-        <Header
-          isLoggedIn={isLoggedIn}
-          handleLogout={handleLogout}
-          handleHamburgerClick={handleHamburgerClick}
-          isDropDownOpen={isUserDetailsOpen}
-          isMobileSized={isMobileSized}
-        />
-
-        <EditProfilePopup
-          isOpen={isEditProfileOpen}
-          isLoading={isLoading}
-          onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser}
-        />
-
-        <EditAvatarPopup
-          isOpen={isEditAvatarOpen}
-          isLoading={isLoading}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}
-        />
-
-        <AddPlacePopup
-          isOpen={isAddPlaceOpen}
-          isLoading={isLoading}
-          onClose={closeAllPopups}
-          onAddPlaceSubmit={handleAddPlaceSubmit}
-        />
-
-        <ConfirmDeletePopup
-          isOpen={isConfirmDeletePopupOpen}
-          isLoading={isLoading}
-          onClose={closeAllPopups}
-          onCardDelete={handleCardDelete}
-          card={selectedToDeleteCard}
-        />
-
-        <ImagePopup card={cardPopup} onClose={closeAllPopups} />
-
-        <Routes>
-          <Route
-            path="/signin"
-            element={
-              <Login isLoading={isLoading} onSubmit={handleLogin} isLoggedIn />
-            }
+        <BrowserRouter>
+          <InfoTooltip
+            isOpen={isAuthOkPopupOpen}
+            onClose={closeAllPopups}
+            isSuccessful={true}
           />
-          <Route
-            path="/signup"
-            element={
-              <Register
-                isLoading={isLoading}
-                onSubmit={handleRegisterSubmit}
-                isLoggedIn
-              />
-            }
+
+          <InfoTooltip
+            isOpen={isAuthErrorPopupOpen}
+            onClose={closeAllPopups}
+            isSuccessful={false}
           />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute redirectPath="/signin" isLoggedIn={isLoggedIn}>
-                <Main
-                  onEditProfileClick={handleEditProfileClick}
-                  onAddPlaceClick={handleAddPlaceClick}
-                  onEditAvatarClick={handleEditAvatarClick}
-                  onConfirmDeleteClick={handleConfirmClick}
-                  onCardClick={handleCardClick}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleCardDelete}
-                  cards={cards}
+          {isUserDetailsOpen && isMobileSized && (
+            <UserDetails onLogout={handleLogout} />
+          )}
+          <Header
+            isLoggedIn={isLoggedIn}
+            handleLogout={handleLogout}
+            handleHamburgerClick={handleHamburgerClick}
+            isDropDownOpen={isUserDetailsOpen}
+            isMobileSized={isMobileSized}
+          />
+
+          <EditProfilePopup
+            isOpen={isEditProfileOpen}
+            isLoading={isLoading}
+            onClose={closeAllPopups}
+            onUpdateUser={handleUpdateUser}
+          />
+
+          <EditAvatarPopup
+            isOpen={isEditAvatarOpen}
+            isLoading={isLoading}
+            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
+          />
+
+          <AddPlacePopup
+            isOpen={isAddPlaceOpen}
+            isLoading={isLoading}
+            onClose={closeAllPopups}
+            onAddPlaceSubmit={handleAddPlaceSubmit}
+          />
+
+          <ConfirmDeletePopup
+            isOpen={isConfirmDeletePopupOpen}
+            isLoading={isLoading}
+            onClose={closeAllPopups}
+            onCardDelete={handleCardDelete}
+            card={selectedToDeleteCard}
+          />
+
+          <ImagePopup card={cardPopup} onClose={closeAllPopups} />
+
+          <Routes>
+            <Route
+              path="/signin"
+              element={
+                <Login
+                  isLoading={isLoading}
+                  onSubmit={handleLogin}
+                  isLoggedIn
                 />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-        <Footer />
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <Register
+                  isLoading={isLoading}
+                  onSubmit={handleRegisterSubmit}
+                  isLoggedIn
+                />
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute redirectPath="/signin" isLoggedIn={isLoggedIn}>
+                  <Main
+                    onEditProfileClick={handleEditProfileClick}
+                    onAddPlaceClick={handleAddPlaceClick}
+                    onEditAvatarClick={handleEditAvatarClick}
+                    onConfirmDeleteClick={handleConfirmClick}
+                    onCardClick={handleCardClick}
+                    onCardLike={handleCardLike}
+                    onCardDelete={handleCardDelete}
+                    cards={cards}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+
+          <Footer />
+        </BrowserRouter>
       </CurrentUserContext.Provider>
     </div>
   );

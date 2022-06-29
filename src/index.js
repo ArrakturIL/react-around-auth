@@ -9,9 +9,9 @@ const root = ReactDOMClient.createRoot(container);
 
 // Initial render: Render an element to the root.
 root.render(
-  <HashRouter basename='/'>
+  
     <App tab="home" />
-  </HashRouter>
+  
 );
 
 // If you want to start measuring performance in your app, pass a function
