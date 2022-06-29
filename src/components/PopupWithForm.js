@@ -8,9 +8,10 @@ function PopupWithForm({
   onSubmit,
   isLoading,
   loadingButton,
+  handlePopupClick,
 }) {
   return (
-    <section className={`popup popup_el_${name} ${isOpen ? `popup_open` : ``}`}>
+    <section onMouseDown={handlePopupClick} className={`popup popup_el_${name} ${isOpen ? `popup_open` : ``}`}>
       <div className="popup__container">
         <button
           type="button"

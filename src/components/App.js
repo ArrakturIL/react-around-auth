@@ -50,6 +50,10 @@ function App() {
 
   const handleResize = () => setWindowWidth(window.innerWidth);
 
+  const handlePopupClick = (e) => {
+    e.target.classList.contains('popup_open') && closeAllPopups();
+  };
+
   /* ========================================================================== */
   /* =                             USE EFFECT                                 = */
   /* ========================================================================== */
@@ -91,15 +95,6 @@ function App() {
   //==========================================================================//
 
   useEffect(() => {
-    const handleClickClose = (e) => {
-      if (
-        e.target.classList.contains('popup_open') ||
-        e.target.classList.contains('popup__close')
-      ) {
-        closeAllPopups();
-      }
-    };
-
     const handleEscClose = (e) => {
       if (e.key === 'Escape') {
         closeAllPopups();
@@ -113,11 +108,11 @@ function App() {
       isConfirmDeletePopupOpen ||
       cardPopup
     ) {
-      document.addEventListener('mousedown', handleClickClose);
+      // document.addEventListener('mousedown', handleClickClose);
       document.addEventListener('keydown', handleEscClose);
     }
     return () => {
-      document.removeEventListener('mousedown', handleClickClose);
+      // document.removeEventListener('mousedown', handleClickClose);
       document.removeEventListener('keydown', handleEscClose);
     };
   }, [
@@ -303,8 +298,9 @@ function App() {
     });
   };
 
-  enableValidation(config);
-
+  useEffect(() => {
+    enableValidation(config);
+  }, [handleEditProfileClick, handleAddPlaceClick, handleEditAvatarClick]);
   // ========================================================================== //
 
   /* ========================================================================== */
@@ -356,7 +352,7 @@ function App() {
     setIsAddPlaceOpen(false);
     setIsEditAvatarOpen(false);
     setIsConfirmDeletePopupOpen(false);
-    setCardPopup(undefined);
+    setCardPopup(null);
     setIsAuthErrorPopupOpen(false);
     setIsAuthOkPopupOpen(false);
   }
@@ -372,12 +368,14 @@ function App() {
           isOpen={isAuthOkPopupOpen}
           onClose={closeAllPopups}
           isSuccessful={true}
+          onPopupClick={handlePopupClick}
         />
 
         <InfoTooltip
           isOpen={isAuthErrorPopupOpen}
           onClose={closeAllPopups}
           isSuccessful={false}
+          onPopupClick={handlePopupClick}
         />
         {isUserDetailsOpen && isMobileSized && (
           <UserDetails onLogout={handleLogout} />
@@ -395,6 +393,7 @@ function App() {
           isLoading={isLoading}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
+          onPopupClick={handlePopupClick}
         />
 
         <EditAvatarPopup
@@ -402,6 +401,7 @@ function App() {
           isLoading={isLoading}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
+          onPopupClick={handlePopupClick}
         />
 
         <AddPlacePopup
@@ -409,6 +409,7 @@ function App() {
           isLoading={isLoading}
           onClose={closeAllPopups}
           onAddPlaceSubmit={handleAddPlaceSubmit}
+          onPopupClick={handlePopupClick}
         />
 
         <ConfirmDeletePopup
@@ -417,9 +418,14 @@ function App() {
           onClose={closeAllPopups}
           onCardDelete={handleCardDelete}
           card={selectedToDeleteCard}
+          handlePopupClick={handlePopupClick}
         />
 
-        <ImagePopup card={cardPopup} onClose={closeAllPopups} />
+        <ImagePopup
+          card={cardPopup}
+          onClose={closeAllPopups}
+          onPopupClick={handlePopupClick}
+        />
 
         <Routes>
           <Route

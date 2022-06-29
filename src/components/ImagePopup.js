@@ -1,6 +1,6 @@
-function ImagePopup({card, onClose}) {
+function ImagePopup({card, onClose, onPopupClick}) {
     return (
-        <section className={`popup popup_el_preview ${card ? `popup_open` : ``}`}>
+        <section onMouseDown={onPopupClick} className={`popup popup_el_preview ${card ? `popup_open` : ``}`}>
             <div className='popup__container popup__container_type_preview'>
                 <button
                     type='button'

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function AddPlacePopup({ isOpen, onClose, onAddPlaceSubmit, isLoading }) {
+function AddPlacePopup({ isOpen, onClose, onAddPlaceSubmit, isLoading, onPopupClick }) {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
 
@@ -32,6 +32,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlaceSubmit, isLoading }) {
       onClose={onClose}
       isLoading={isLoading}
       onSubmit={handleSubmit}
+      handlePopupClick={onPopupClick}
     >
       {" "}
       <label className="edit-form__label">

@@ -6,6 +6,7 @@ function ConfirmDeletePopup({
   card,
   onCardDelete,
   isLoading,
+  handlePopupClick,
 }) {
   function handleSubmit(e) {
     e.preventDefault();
@@ -21,6 +22,7 @@ function ConfirmDeletePopup({
       onClose={onClose}
       isLoading={isLoading}
       onSubmit={handleSubmit}
+      handlePopupClick={handlePopupClick}
     ></PopupWithForm>
   );
 }
