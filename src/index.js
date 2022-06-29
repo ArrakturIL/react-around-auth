@@ -9,7 +9,7 @@ const root = ReactDOMClient.createRoot(container);
 
 // Initial render: Render an element to the root.
 root.render(
-  <HashRouter>
+  <HashRouter basename='/'>
     <App tab="home" />
   </HashRouter>
 );

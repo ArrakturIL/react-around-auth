@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/around-react-auth/static/css/main.ab914428.css",
-    "main.js": "/around-react-auth/static/js/main.460df6d5.js",
+    "main.js": "/around-react-auth/static/js/main.8bc4d200.js",
     "static/js/787.298d95a7.chunk.js": "/around-react-auth/static/js/787.298d95a7.chunk.js",
     "static/media/Inter-Medium.woff": "/around-react-auth/static/media/Inter-Medium.9053572c46aeb4b16caa.woff",
     "static/media/Inter-Black.woff": "/around-react-auth/static/media/Inter-Black.c6938660eec019fefd68.woff",
@@ -23,11 +23,11 @@
     "static/media/Edit_Button.svg": "/around-react-auth/static/media/Edit_Button.a1892ea72cb87c8fc3aa.svg",
     "static/media/avatar_edit.svg": "/around-react-auth/static/media/avatar_edit.a086f758840ae814ecde.svg",
     "main.ab914428.css.map": "/around-react-auth/static/css/main.ab914428.css.map",
-    "main.460df6d5.js.map": "/around-react-auth/static/js/main.460df6d5.js.map",
+    "main.8bc4d200.js.map": "/around-react-auth/static/js/main.8bc4d200.js.map",
     "787.298d95a7.chunk.js.map": "/around-react-auth/static/js/787.298d95a7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ab914428.css",
-    "static/js/main.460df6d5.js"
+    "static/js/main.8bc4d200.js"
   ]
 }
