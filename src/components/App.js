@@ -15,8 +15,6 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
-import FormValidator from '../utils/FormValidator';
-import config from '../utils/config';
 import InfoTooltip from './InfoTooltip';
 import Login from './Login';
 import ProtectedRoute from './ProtectedRoute';
@@ -284,45 +282,22 @@ function App() {
   }
 
   /* ========================================================================== */
-  /* =                            CONSTANS                                   = */
-  /* ========================================================================== */
-
-  const formValidators = {};
-  const enableValidation = (config) => {
-    const formList = Array.from(document.querySelectorAll(config.formSelector));
-    formList.forEach((formElement) => {
-      const validator = new FormValidator(formElement, config);
-      const formName = formElement.getAttribute('name');
-      formValidators[formName] = validator;
-      validator.enableValidation();
-    });
-  };
-
-  useEffect(() => {
-    enableValidation(config);
-  }, [handleEditProfileClick, handleAddPlaceClick, handleEditAvatarClick]);
-  // ========================================================================== //
-
-  /* ========================================================================== */
   /* =                            FUNCTIONS                                   = */
   /* ========================================================================== */
 
   function handleEditProfileClick() {
-    formValidators['profile'].resetValidation();
     setIsEditProfileOpen(true);
   }
 
   // ========================================================================== //
 
   function handleAddPlaceClick() {
-    formValidators['new-place'].resetValidation();
     setIsAddPlaceOpen(true);
   }
 
   // ========================================================================== //
 
   function handleEditAvatarClick() {
-    formValidators['edit-avatar'].resetValidation();
     setIsEditAvatarOpen(true);
   }
 

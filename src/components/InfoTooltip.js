@@ -4,12 +4,12 @@ import errorImg from '../images/error.svg';
 export default function InfoTooltip(props) {
   const { isOpen, onClose, isSuccessful, onPopupClick } = props;
   return (
-    <div className={`popup pupup_el_info ${isOpen ? 'popup_open' : ''}`}>
+    <div onClick={onPopupClick} className={`popup pupup_el_info ${isOpen ? 'popup_open' : ''}`}>
       <div className="popup__container popup__container_type_info">
         <button
           className="popup__close popup__close_el_info"
           type="button"
-          onClick={onPopupClick}
+          onClick={onClose}
         ></button>
         <img
           className="popup__auth-img"

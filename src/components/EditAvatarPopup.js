@@ -1,20 +1,41 @@
-import { useEffect, useRef } from "react";
-import PopupWithForm from "./PopupWithForm";
+import { useEffect, useState } from 'react';
+import PopupWithForm from './PopupWithForm';
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading, onPopupClick }) {
-  const inputRef = useRef();
+function EditAvatarPopup(props) {
+  const { isOpen, onClose, onUpdateAvatar, isLoading, onPopupClick } = props;
+  const [imgInput, setImgInput] = useState('');
+  const [isValid, setIsValid] = useState(true);
+  const [errorFields, setErrorFields] = useState({});
+  // const [showError, setShowError] = useState(true);
 
   useEffect(() => {
-    inputRef.current.value = "";
+    if (!isOpen) {
+      setImgInput('');
+      setErrorFields({});
+    }
   }, [isOpen]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  useEffect(() => {
+    if (isOpen) {
+      const isFormValid = !Object.values(errorFields).some((validity) =>
+        Boolean(validity)
+      );
+      setIsValid(isFormValid);
+    }
+  }, [errorFields, isValid, isOpen]);
 
-    onUpdateAvatar({
-      avatar: inputRef.current.value,
+  const handleInputChange = (e) => {
+    setImgInput(e.target.value);
+    setErrorFields({
+      ...errorFields,
+      [e.target.name]: e.target.validationMessage,
     });
-  }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onUpdateAvatar({ avatar: imgInput });
+  };
 
   return (
     <PopupWithForm
@@ -27,18 +48,29 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading, onPopupCl
       isLoading={isLoading}
       onSubmit={handleSubmit}
       handlePopupClose={onPopupClick}
+      isValid={isValid}
     >
       <label className="edit-form__label">
         <input
-          name="avatar"
+          name="avatarInput"
           id="avatar"
           type="url"
-          className="edit-form__text-input edit-form__text-input_el_avatar"
+          className={`edit-form__text-input ${
+            errorFields.avatarInput && 'edit-form__text-input_type_error'
+          }`}
           placeholder="Avatar URL"
           required
-          ref={inputRef}
+          onChange={handleInputChange}
+          value={imgInput}
         />
-        <span id="avatar-error" className="edit-form__error"></span>
+        <span
+          id="avatar-error"
+          className={`edit-form__error ${
+            !isValid && 'edit-form__error_visible'
+          }`}
+        >
+          {errorFields.avatarInput}
+        </span>
       </label>
     </PopupWithForm>
   );

@@ -1,26 +1,46 @@
-import { useEffect, useState } from "react";
-import PopupWithForm from "./PopupWithForm";
+import { useEffect, useState } from 'react';
+import PopupWithForm from './PopupWithForm';
 
-function AddPlacePopup({ isOpen, onClose, onAddPlaceSubmit, isLoading, onPopupClick }) {
-  const [title, setTitle] = useState("");
-  const [link, setLink] = useState("");
+function AddPlacePopup(props) {
+  const { isOpen, onClose, onAddPlaceSubmit, isLoading, onPopupClick } = props;
+  const [inputs, setInputs] = useState({});
+  const [isValid, setIsValid] = useState(true);
+  const [errorFields, setErrorFields] = useState({});
 
   useEffect(() => {
-    setTitle("");
-    setLink("");
+    setInputs({});
+    if (!isOpen) {
+      setErrorFields({});
+    }
   }, [isOpen]);
 
-  function handleTitleChange(e) {
-    setTitle(e.target.value);
-  }
-  function handleLinkChange(e) {
-    setLink(e.target.value);
-  }
-  function handleSubmit(e) {
+  useEffect(() => {
+    if (isOpen) {
+      const formIsValid =
+        inputs.linkInput &&
+        inputs.titleInput &&
+        !Object.values(errorFields).some((validity) => Boolean(validity));
+      setIsValid(formIsValid || false);
+    
+    }
+
+  }, [errorFields, inputs, isOpen]);
+  const handleInputChange = (e) => {
+    setInputs({
+      ...inputs,
+      [e.target.name]: e.target.value,
+    });
+
+    setErrorFields({
+      ...errorFields,
+      [e.target.name]: e.target.validationMessage,
+    });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const newPlace = { name: title, link };
-    onAddPlaceSubmit(newPlace);
-  }
+    onAddPlaceSubmit({ name: inputs.titleInput, link: inputs.linkInput });
+  };
 
   return (
     <PopupWithForm
@@ -33,35 +53,54 @@ function AddPlacePopup({ isOpen, onClose, onAddPlaceSubmit, isLoading, onPopupCl
       isLoading={isLoading}
       onSubmit={handleSubmit}
       handlePopupClick={onPopupClick}
+      isValid={isValid}
     >
-      {" "}
+      {' '}
       <label className="edit-form__label">
         <input
-          name="title"
+          name="titleInput"
           id="title"
           type="text"
-          className="edit-form__text-input edit-form__text-input_el_title"
+          className={`edit-form__text-input ${
+            errorFields.titleInput && 'edit-form__text-input_type_error'
+          }`}
           placeholder="Title"
           required
           minLength="2"
           maxLength="30"
-          value={title || ""}
-          onChange={handleTitleChange}
+          value={inputs.titleInput || ''}
+          onChange={handleInputChange}
         />
-        <span id="title-error" className="edit-form__error"></span>
+        <span
+          id="title-error"
+          className={`edit-form__error ${
+            !isValid && 'edit-form__error_visible'
+          }`}
+        >
+          {errorFields.titleInput}
+        </span>
       </label>
       <label className="edit-form__label">
         <input
-          name="link"
+          name="linkInput"
           id="link"
           type="url"
-          className="edit-form__text-input edit-form__text-input_el_link"
+          className={`edit-form__text-input ${
+            errorFields.linktInput && 'edit-form__text-input_type_error'
+          }`}
           placeholder="Image URL"
           required
-          value={link || ""}
-          onChange={handleLinkChange}
+          value={inputs.linkInput || ''}
+          onChange={handleInputChange}
         />
-        <span id="link-error" className="edit-form__error"></span>
+        <span
+          id="link-error"
+          className={`edit-form__error ${
+            !isValid && 'edit-form__error_visible'
+          }`}
+        >
+          {errorFields.linkInput}
+        </span>
       </label>
     </PopupWithForm>
   );

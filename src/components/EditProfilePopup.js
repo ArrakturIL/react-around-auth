@@ -2,32 +2,53 @@ import { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import PopupWithForm from './PopupWithForm';
 
-function EditProfilePopup({
-  isOpen,
-  onClose,
-  onUpdateUser,
-  isLoading,
-  onPopupClick,
-}) {
+function EditProfilePopup(props) {
+  const { isOpen, onClose, onUpdateUser, isLoading, onPopupClick } = props;
+
+  const [inputs, setInputs] = useState({});
+  const [isValid, setIsValid] = useState(true);
+  const [errorFields, setErrorFields] = useState({});
   const currentUser = useContext(CurrentUserContext);
-  const [name, setName] = useState('');
-  const [about, setAbout] = useState('');
 
   useEffect(() => {
-    setName(currentUser.name);
-    setAbout(currentUser.about);
+    if (currentUser.name && currentUser.about && isOpen) {
+      setInputs({
+        nameInput: currentUser.name,
+        aboutInput: currentUser.about,
+      });
+    }
   }, [currentUser, isOpen]);
 
-  function handleNameChange(e) {
-    setName(e.target.value);
-  }
-  function handleAboutChange(e) {
-    setAbout(e.target.value);
-  }
-  function handleSubmit(e) {
+  const handleInputChange = (e) => {
+    setInputs({
+      ...inputs,
+      [e.target.name]: e.target.value,
+    });
+    setErrorFields({
+      ...errorFields,
+      [e.target.name]: e.target.validationMessage,
+    });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdateUser({ name, about });
-  }
+    onUpdateUser({ name: inputs.nameInput, about: inputs.aboutInput });
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      setErrorFields({});
+    }
+  }, [isOpen]);
+  
+  useEffect(() => {
+    if (isOpen) {
+      const isFormValid = !Object.values(errorFields).some((validity) =>
+        Boolean(validity)
+      );
+      setIsValid(isFormValid);
+    }
+  }, [errorFields, isValid, isOpen]);
 
   return (
     <PopupWithForm
@@ -39,38 +60,47 @@ function EditProfilePopup({
       onClose={onClose}
       isLoading={isLoading}
       onSubmit={handleSubmit}
-      handlePopupClose={onPopupClick}
+      handlePopupClick={onPopupClick}
+      isValid={isValid}
     >
       {' '}
       <label className="edit-form__label">
         <input
-          name="name"
+          name="nameInput"
           id="name"
           type="text"
-          className="edit-form__text-input edit-form__text-input_el_name"
+          className={`edit-form__text-input ${
+            errorFields.nameInput && 'edit-form__text-input_type_error'
+          }`}
           placeholder="Name"
           required
           minLength="2"
           maxLength="40"
-          value={name || ''}
-          onChange={handleNameChange}
+          value={inputs.nameInput || ''}
+          onChange={handleInputChange}
         />
-        <span id="name-error" className="edit-form__error"></span>
+        <span id="name-error" className={`edit-form__error ${!isValid && 'edit-form__error_visible'}`}>
+          {errorFields.nameInput}
+        </span>
       </label>
       <label className="edit-form__label">
         <input
-          name="about"
+          name="aboutInput"
           id="about"
           type="text"
-          className="edit-form__text-input edit-form__text-input_el_about"
+          className={`edit-form__text-input ${
+            errorFields.aboutInput && 'edit-form__text-input_type_error'
+          }`}
           placeholder="About Me"
           required
           minLength="2"
           maxLength="200"
-          value={about || ''}
-          onChange={handleAboutChange}
+          value={inputs.aboutInput || ''}
+          onChange={handleInputChange}
         />
-        <span id="about-error" className="edit-form__error"></span>
+       <span id="name-error" className={`edit-form__error ${!isValid && 'edit-form__error_visible'}`}>
+          {errorFields.aboutInput}
+        </span>
       </label>
     </PopupWithForm>
   );

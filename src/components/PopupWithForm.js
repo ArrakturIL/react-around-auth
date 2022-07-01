@@ -1,17 +1,24 @@
-function PopupWithForm({
-  title,
-  name,
-  isOpen,
-  onClose,
-  submitButton,
-  children,
-  onSubmit,
-  isLoading,
-  loadingButton,
-  handlePopupClick,
-}) {
+function PopupWithForm(props) {
+  const {
+    title,
+    name,
+    isOpen,
+    onClose,
+    submitButton,
+    children,
+    onSubmit,
+    isLoading,
+    loadingButton,
+    handlePopupClick,
+    isValid = true,
+  } = props;
+  const buttonClassName = `${!isValid ? 'edit-form__save_disabled' : ''} edit-form__save`;
+ 
   return (
-    <section onMouseDown={handlePopupClick} className={`popup popup_el_${name} ${isOpen ? `popup_open` : ``}`}>
+    <section
+      onMouseDown={handlePopupClick}
+      className={`popup popup_el_${name} ${isOpen ? `popup_open` : ``}`}
+    >
       <div className="popup__container">
         <button
           type="button"
@@ -30,7 +37,7 @@ function PopupWithForm({
 
             {children}
           </fieldset>
-          <button className="edit-form__save" type="submit">
+          <button className={buttonClassName} type="submit" disabled={!isValid}>
             {isLoading ? loadingButton : submitButton}
           </button>
         </form>
