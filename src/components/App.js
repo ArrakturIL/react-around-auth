@@ -48,10 +48,6 @@ function App() {
 
   const handleResize = () => setWindowWidth(window.innerWidth);
 
-  const handlePopupClick = (e) => {
-    e.target.classList.contains('popup_open') && closeAllPopups();
-  };
-
   /* ========================================================================== */
   /* =                             USE EFFECT                                 = */
   /* ========================================================================== */
@@ -89,6 +85,16 @@ function App() {
   }, []);
 
   // ========================================================================== //
+  const handlePopupClick = (e) => {
+    (isEditProfileOpen ||
+      isAddPlaceOpen ||
+      isEditAvatarOpen ||
+      isConfirmDeletePopupOpen ||
+      cardPopup ||
+      isAuthOkPopupOpen ||
+      isAuthErrorPopupOpen) &&
+      closeAllPopups();
+  };
 
   //==========================================================================//
   useEffect(() => {
@@ -105,11 +111,9 @@ function App() {
       isConfirmDeletePopupOpen ||
       cardPopup
     ) {
-      // document.addEventListener('mousedown', hendleOverlayClick);
       document.addEventListener('keydown', handleEscClose);
     }
     return () => {
-      // document.removeEventListener('mousedown', hendleOverlayClick);
       document.removeEventListener('keydown', handleEscClose);
     };
   }, [

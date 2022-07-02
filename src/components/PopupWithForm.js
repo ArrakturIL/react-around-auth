@@ -12,14 +12,22 @@ function PopupWithForm(props) {
     handlePopupClick,
     isValid = true,
   } = props;
-  const buttonClassName = `${!isValid ? 'edit-form__save_disabled' : ''} edit-form__save`;
- 
+  const buttonClassName = `${
+    !isValid ? 'edit-form__save_disabled' : ''
+  } edit-form__save`;
+  const popupContainerClickHandler = (e) => {
+    e.stopPropagation();
+  };
+
   return (
     <section
       onMouseDown={handlePopupClick}
       className={`popup popup_el_${name} ${isOpen ? `popup_open` : ``}`}
     >
-      <div className="popup__container">
+      <div
+        className="popup__container"
+        onMouseDown={popupContainerClickHandler}
+      >
         <button
           type="button"
           className="popup__close"

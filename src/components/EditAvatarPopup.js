@@ -46,7 +46,7 @@ function EditAvatarPopup(props) {
       onClose={onClose}
       isLoading={isLoading}
       onSubmit={handleSubmit}
-      handlePopupClose={onPopupClick}
+      handlePopupClick={onPopupClick}
       isValid={isValid}
     >
       <label className="edit-form__label">
