@@ -4,9 +4,8 @@ import PopupWithForm from './PopupWithForm';
 function EditAvatarPopup(props) {
   const { isOpen, onClose, onUpdateAvatar, isLoading, onPopupClick } = props;
   const [imgInput, setImgInput] = useState('');
-  const [isValid, setIsValid] = useState(true);
+  const [isValid, setIsValid] = useState(false);
   const [errorFields, setErrorFields] = useState({});
-  // const [showError, setShowError] = useState(true);
 
   useEffect(() => {
     if (!isOpen) {
@@ -17,8 +16,8 @@ function EditAvatarPopup(props) {
 
   useEffect(() => {
     if (isOpen) {
-      const isFormValid = !Object.values(errorFields).some((validity) =>
-        Boolean(validity)
+      const isFormValid = Object.values(errorFields).some(
+        (validity) => Boolean(validity) === false
       );
       setIsValid(isFormValid);
     }

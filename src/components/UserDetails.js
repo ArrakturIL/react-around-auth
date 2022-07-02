@@ -17,12 +17,7 @@ const UserDetails = (props) => {
     <div className={`user-details ${isOpen && 'user-details_open'}`}>
       <span className="header__user-email">{currentUser.email}</span>
       <div className="header__nav-link" onClick={handleLogout}>
-        <Link
-          to={'/signin'}
-          style={{ color: '#A9A9A9', textDecoration: 'inherit' }}
-        >
-          {'Log out'}
-        </Link>
+        <Link className="header__nav-link" to={'/signin'}>Log out</Link>
       </div>
     </div>
   );

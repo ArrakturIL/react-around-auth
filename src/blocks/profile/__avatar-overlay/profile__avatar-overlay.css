@@ -10,8 +10,3 @@
     visibility: hidden;
     transition: visibility 0.2s, opacity 0.2s linear;
 }
-
-.profile__avatar:hover .profile__avatar-overlay {
-    opacity: 1;
-    visibility: visible;
-}

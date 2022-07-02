@@ -95,11 +95,7 @@ const Register = (props) => {
         </button>
         {/* </fieldset> */}
         <div className="auth-page__info">
-          <Link
-            to="/signin"
-            className="auth-page__link"
-            style={{ color: 'inherit', textDecoration: 'inherit' }}
-          >
+          <Link to="/signin" className="auth-page__link">
             Already a member? Log in here!
           </Link>
         </div>

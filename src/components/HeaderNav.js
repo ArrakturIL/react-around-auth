@@ -19,7 +19,6 @@ const HeaderNav = (props) => {
 
   return isMobileSized && isLoggedIn ? (
     <img
-      style={{ cursor: 'pointer' }}
       onClick={handleHamburgerClick}
       className={
         isDropDownOpen
@@ -33,19 +32,12 @@ const HeaderNav = (props) => {
     <div className="header__nav-bar">
       <span className="header__user-email">{currentUser.email}</span>
       <div className="header__nav-link" onClick={handleLogout}>
-        <Link
-          to={'/signin'}
-          style={{ color: '#A9A9A9', textDecoration: 'inherit' }}
-        >
-          {'Log out'}
-        </Link>
+        <Link className="header__nav-link" to={'/signin'}>Log out</Link>
       </div>
     </div>
   ) : (
     <span className="header__nav-link">
-      <Link to={linkTo} style={{ color: 'inherit', textDecoration: 'inherit' }}>
-        {linkText}
-      </Link>
+      <Link className="header__nav-link" to={linkTo}>{linkText}</Link>
     </span>
   );
 };

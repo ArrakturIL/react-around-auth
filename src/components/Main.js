@@ -1,9 +1,9 @@
 /* ========================================================================== */
 /* =                             IMPORTS                                    = */
 /* ========================================================================== */
-import { useContext } from "react";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import Card from "./Card";
+import { useContext } from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import Card from './Card';
 
 /* ========================================================================== */
 /* =                          MAIN COMPONENT                                = */
@@ -17,25 +17,27 @@ function Main({
   onConfirmDeleteClick,
   onCardDelete,
   onCardLike,
-  cards
+  cards,
 }) {
   const currentUser = useContext(CurrentUserContext);
 
   return (
     <main className="content">
       <section className="profile">
-        <div
-          className="profile__avatar"
-          style={{ backgroundImage: `url(${currentUser.avatar})` }}
-        >
+        <div className="profile__avatar-container">
           <div className="profile__avatar-overlay">
             <button
               className="profile__avatar-edit"
               type="button"
               id="edit-avatar"
               onClick={onEditAvatarClick}
-            ></button>
+            />
           </div>
+          <img
+            src={currentUser.avatar}
+            alt="avatar"
+            className="profile__avatar-img"
+          />
         </div>
         <div className="profile__info">
           <h1 className="profile__name">{currentUser.name}</h1>

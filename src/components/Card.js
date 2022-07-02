@@ -1,18 +1,15 @@
-import { useContext } from "react";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import { useContext } from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Card({ onCardClick, card, onConfirmDeleteClick, onCardLike }) {
   const currentUser = useContext(CurrentUserContext);
 
   const isOwn = currentUser._id === card.owner._id;
-  const deleteButtonActive = {
-    display: isOwn ? "block" : "none",
-  };
 
   const isLiked = card.likes.some((like) => like._id === currentUser._id);
 
   const likeButtonClassName = `element__post-like${
-    isLiked ? " element__post-like_active" : ""
+    isLiked ? ' element__post-like_active' : ''
   }`;
 
   function handleLikeClick() {
@@ -28,12 +25,13 @@ function Card({ onCardClick, card, onConfirmDeleteClick, onCardLike }) {
 
   return (
     <article className="element">
-      <button
-        className="element__delete"
-        type="button"
-        onClick={handleDeleteClick}
-        style={deleteButtonActive}
-      />
+      {isOwn && (
+        <button
+          className="element__delete"
+          type="button"
+          onClick={handleDeleteClick}
+        />
+      )}
       <img
         className="element__post-img"
         alt={card.name}

@@ -95,7 +95,6 @@ const Login = (props) => {
         <div className="auth-page__info">
           <Link
             to="/signup"
-            style={{ color: 'inherit', textDecoration: 'inherit' }}
             className="auth-page__link"
           >
             Not a member yet? Sign up here!

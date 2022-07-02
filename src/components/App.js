@@ -91,7 +91,6 @@ function App() {
   // ========================================================================== //
 
   //==========================================================================//
-
   useEffect(() => {
     const handleEscClose = (e) => {
       if (e.key === 'Escape') {
@@ -106,11 +105,11 @@ function App() {
       isConfirmDeletePopupOpen ||
       cardPopup
     ) {
-      // document.addEventListener('mousedown', handleClickClose);
+      // document.addEventListener('mousedown', hendleOverlayClick);
       document.addEventListener('keydown', handleEscClose);
     }
     return () => {
-      // document.removeEventListener('mousedown', handleClickClose);
+      // document.removeEventListener('mousedown', hendleOverlayClick);
       document.removeEventListener('keydown', handleEscClose);
     };
   }, [

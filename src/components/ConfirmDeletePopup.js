@@ -23,7 +23,7 @@ function ConfirmDeletePopup({
       isLoading={isLoading}
       onSubmit={handleSubmit}
       handlePopupClick={handlePopupClick}
-    ></PopupWithForm>
+    />
   );
 }
 export default ConfirmDeletePopup;
